@@ -25,4 +25,12 @@ Opciones del generador: `--pausa MS` (espera extra entre filas), `--ventana TITU
 (frena si la ventana de RAFAM deja de estar activa), `--hoja NOMBRE`.
 Un tooltip muestra el avance (`Fila n de N`).
 
+## Contexto para una sesión local (PC con RAFAM)
+
+- Programa: `\\FALKNER\Rafam\RAFAM.exe` (acceso directo "RAFAM - Acceso directo").
+- Usuario: `L310019`. La contraseña NO va en el repo: pedirla al usuario.
+- Trabajar en la pestaña **Presupuesto**, ejercicio **2027**.
+- Carga: abrir el F7 de la categoría, lápiz (agregar), confirmar fuente de financiamiento, F1.
+- Las cargas reales las revisa y dispara el usuario; frenar con F2 ante cualquier cosa rara.
+
 Archivos: `generar_ahk.py` (generador), `03 01.13.ahk` (ejemplo cargado a mano), `cat.ahk` (plantilla mínima).
