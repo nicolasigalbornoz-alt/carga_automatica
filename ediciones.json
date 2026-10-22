@@ -1,0 +1,50 @@
+[
+ {
+  "ruta": "D:\\Usuarios\\310019\\carga_automatica\\formularios\\25 - Desarrollo Productivo\\16.02.00.xlsx",
+  "hoja": "F7 esp",
+  "celda": "F11",
+  "esperado": 23.113,
+  "valor": 23113,
+  "motivo": "punto de miles mal escrito; en 16.04 el mismo bien (2.3.3.00861) esta en 23113"
+ },
+ {
+  "ruta": "D:\\Usuarios\\310019\\carga_automatica\\formularios\\00 - HCD\\01.41.00.xlsx",
+  "hoja": "F7 esp",
+  "celda": "D24",
+  "esperado": "SERVICIO",
+  "valor": "CADA UNO",
+  "motivo": "inciso 4 (LICENCIAS): la unidad es siempre 3 (cada uno)"
+ },
+ {
+  "ruta": "D:\\Usuarios\\310019\\carga_automatica\\formularios\\11 - Planificación Estratégica\\01.25.00.xlsx",
+  "hoja": "F7 esp",
+  "celda": "D39",
+  "esperado": "UNIDAD",
+  "valor": "CADA UNO",
+  "motivo": "inciso 4 (LICENCIAS AUTOCAD): la unidad es siempre 3 (cada uno)"
+ },
+ {
+  "ruta": "D:\\Usuarios\\310019\\carga_automatica\\formularios\\00 - HCD\\01.41.00.xlsx",
+  "hoja": "Carga",
+  "celda": "I106",
+  "esperado": 3,
+  "valor": 176,
+  "motivo": "3.3.1.07030 es inciso 3: la unidad es siempre 176 (servicio)"
+ },
+ {
+  "ruta": "D:\\Usuarios\\310019\\carga_automatica\\formularios\\16 - Jefatura de Gabinete\\01.06.00.xlsx",
+  "hoja": "Carga",
+  "celda": "I34",
+  "esperado": 3,
+  "valor": 176,
+  "motivo": "3.9.1.07239 es inciso 3: la unidad es siempre 176 (servicio)"
+ },
+ {
+  "ruta": "D:\\Usuarios\\310019\\carga_automatica\\formularios\\16 - Jefatura de Gabinete\\48.00.00.xlsx",
+  "hoja": "F7 esp",
+  "celda": "F12",
+  "esperado": 20.5,
+  "valor": 20500,
+  "motivo": "MANTENIMIENTO MATAFUEGOS: el usuario indico que el precio correcto es 20500"
+ }
+]
