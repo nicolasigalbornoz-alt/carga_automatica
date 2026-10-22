@@ -34,3 +34,20 @@ Un tooltip muestra el avance (`Fila n de N`).
 - Las cargas reales las revisa y dispara el usuario; frenar con F2 ante cualquier cosa rara.
 
 Archivos: `generar_ahk.py` (generador), `03 01.13.ahk` (ejemplo cargado a mano), `cat.ahk` (plantilla mínima).
+
+## Bot de navegación (login automático, solo lectura)
+
+`rafam_bot.ps1` abre RAFAM, inicia sesión, entra a Presupuesto → Formulación → F7 y abre el detalle de la
+categoría (`-Categoria 13` = Economía y Finanzas / 01 / 13 Administración de Políticas Fiscales). No escribe nada
+en RAFAM; deja capturas en `logs/` (ignorado por git). Ver `RECONOCIMIENTO.md` para el recorrido.
+
+1. **Una sola vez**: doble clic en `guardar_credencial.cmd`. Una ventana de Windows pide usuario y contraseña y los
+   guarda cifrados (DPAPI) en `%LOCALAPPDATA%\rafam_bot\cred.xml`, **fuera del repo**. Solo los puede leer el mismo
+   usuario de Windows en esta PC. Si cambia la contraseña de RAFAM, repetir.
+2. Correr: doble clic en `ejecutar_bot.cmd` (o `powershell -File rafam_bot.ps1`). Un único intento de login.
+3. Desatendido: programar `ejecutar_bot.cmd` en el Programador de tareas con el mismo usuario de Windows,
+   "Ejecutar solo cuando el usuario haya iniciado sesión". El escritorio tiene que estar **desbloqueado**
+   (el bot usa clics y teclas reales). Ejemplo:
+   `schtasks /Create /TN "RAFAM bot" /TR "D:\Usuarios\310019\carga_automatica\ejecutar_bot.cmd" /SC DAILY /ST 07:00 /IT`
+
+La contraseña nunca va en el repo (este repo tiene remoto en GitHub).
