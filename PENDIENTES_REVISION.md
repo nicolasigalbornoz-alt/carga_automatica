@@ -180,3 +180,9 @@ El usuario autorizo: redondear a cero decimales los precios con mas de 2 decimal
 - **Siguen sin tocar (excluidos por el usuario):** UM de 35.01 (LENTEJUELAS, PAPEL PASPARTOUF -> PAQUETE 210; TELA ACETATO, PLASTICO DE BURBUJAS, TANZA -> ROLLO 208) y 35.01 ESMALTE 2.5.5.0057.
 - **Siguen pendientes de las areas:** 01.06 NEUMATICO P/AUTO (sin codigo/precio) y fila "Subtotal"; 42.01 CORTINA BLACK OUT y PANTALLA PROYECTOR sin codigo.
 - Nota: en modo Modificar, Enter tras el precio abre el dialogo "Guarda los datos modificados?"; para limpiar el campo de precio usar Ctrl+A y Supr (End/Shift+Home lo deja corrupto).
+
+## 16 Jefatura de Gabinete / 01.02.00 (23/10/2026)
+
+Cargado y verificado: 1110116000 / 01 Actividad Central / 02 Comunicacion e Imagen Institucional. Base 3 reg. / $174.003.008,00 (31402382, 34904331, 35402195);
+planilla 24 filas / $825.680.363, ninguna duplicada ni con problemas de validacion -> 27 reg. / $999.683.371,00 (prueba 4/$177.636.608; lote de 20 -> 24/$989.246.331).
+Unica correccion: 4.3.7.03506 traia precio 1548569,9999999998 (ruido de coma flotante) y se cargo como $1.548.570. Sin UM forzadas (los inciso 2 fuera del Listado dicen CADA UNO = 3).
