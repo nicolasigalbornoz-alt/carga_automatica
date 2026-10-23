@@ -166,3 +166,17 @@ Cargados 198 de 201 bienes (conteo y total verificados por categoria; antes se b
 | 11 Planificacion | 01.25 | 3.4.9.04331 SERVICIO ASESORAMIENTO PROFESIONAL (12 x 6.500.000) | duplicado: ya existe en la categoria con fuente 110 (12 x 3.359.682) | decidir si se corrige el existente (lo decide el usuario) |
 Notas: la UM del inciso 2 fuera del Listado se tomo de la columna D del area (TONELADA 22, ROLLO 208, etc.). RAFAM se cerro solo una vez
 al cerrar un "Error: Debe seleccionar una categoria programatica de minimo nivel" (clic fuera del texto de la etiqueta del arbol); se reabrio con rafam_bot.ps1 sin perdida de datos.
+
+## Correcciones autorizadas el 23/10/2026 (excepto 35.01)
+
+El usuario autorizo: redondear a cero decimales los precios con mas de 2 decimales y hacer los cambios pendientes, salvo los de UM de 35.01.
+- 03/01.07 (1110103000 / 01 / 07): CARGADOS 3.4.6.08119 MANTENIMIENTO DE INFRAESTRUCTURA INFORMATICA (UM 176, 12 x $5.600.700, redondeo de 5.600.699,7858)
+  y 4.3.6.01555 SERVIDOR (UM 3, 12 x $525.000, redondeo de 525.000,0042). Antes se verifico con Buscar que no existian. 131 -> 133 reg.; total
+  $1.472.864.986 -> $1.546.373.386 (+67.208.400 +6.300.000). Verificado.
+- 11/01.25 (1110111000 / 01 / 25): 3.4.9.04331 SERVICIO ASESORAMIENTO PROFESIONAL (fuente 110) corregido con Modificar + Guardar de 12 x $3.359.682 a
+  12 x $6.500.000 (precio de la planilla; solo ese campo). 164 reg. (sin cambio); total $925.231.194,94 -> $962.915.010,94. Verificado.
+- 25 Desarrollo Productivo (1110125000) / 16.02: 2.3.3.00861 SOBRE C/MEMBRETE corregido con Modificar + Guardar de $23,11 a $23.113 (15 u.).
+  105 reg. (sin cambio); total $16.440.675,95 -> $16.787.024,30. Verificado.
+- **Siguen sin tocar (excluidos por el usuario):** UM de 35.01 (LENTEJUELAS, PAPEL PASPARTOUF -> PAQUETE 210; TELA ACETATO, PLASTICO DE BURBUJAS, TANZA -> ROLLO 208) y 35.01 ESMALTE 2.5.5.0057.
+- **Siguen pendientes de las areas:** 01.06 NEUMATICO P/AUTO (sin codigo/precio) y fila "Subtotal"; 42.01 CORTINA BLACK OUT y PANTALLA PROYECTOR sin codigo.
+- Nota: en modo Modificar, Enter tras el precio abre el dialogo "Guarda los datos modificados?"; para limpiar el campo de precio usar Ctrl+A y Supr (End/Shift+Home lo deja corrupto).
