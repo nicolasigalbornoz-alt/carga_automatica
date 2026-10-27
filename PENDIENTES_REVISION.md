@@ -89,7 +89,48 @@ verificar y la fila queda pendiente.
   (habia una confusion con 131/132). Las filas cargadas con fuente 110 estan bien y quedan. NO se borra nada: lo preexistente con
   fuente 132 tambien se conserva. Si alguna fila de 39.00 quedo sin cargar por esa duda, se puede cargar con fuente 110.
 
+## CONCILIACION F7 vs TIPEADO (26/10/2026; conciliar_f7.py -> REVISION_F7_vs_CARGADO.xlsx)
+
+De 4.417 bienes con datos en los F7 de la carpeta valida, 4.386 se tipearon con el mismo codigo, fuente, cantidad y precio. Quedan 25 sin cargar y 8 con valores distintos:
+- **Duplicados por regla (se conserva lo cargado), 6:** 03/01.13 gas oil 2.5.6.00793; 03/01.39 3.1.5.01384; 07/01.11 3.2.1.02527; 07/01.43 gas oil 2.5.6.00793;
+  17/19.01 4.8.1.01748 (fila 24: 1 x 7.000.000; se cargo la fila 67: 200 x 3.500.000 = $700.000.000, REVISAR monto) y 2.9.6.01190 (fila 33: 20 x 28.000; se cargo 200 x 70.000).
+- **KIT/SET sin codigo de UM, 5 ($65.065.000), 17/19.01:** el usuario pidio cargarlas igual: usar UM 3 (CADA UNO) y anotar que la real es KIT/SET.
+- **Datos incompletos, 3:** 07/42.01 cortina black out y pantalla proyector (sin codigo ni UM); 16/35.01 esmalte antioxidante blanco (codigo 2.5.5.0057 malformado).
+- **Sin evidencia de que se tipearon, 8 (verificar en RAFAM):** 07/38.01 matafuegos 3.3.3.01627 (20 x 48.000) y equipamiento 4.6.0.03794 (6 x 300.000); 16/35.01 lentejuelas 2.2.9.06109,
+  soporte microfono 2.7.9.07956, foam board y telgopor (2.9.2.07011, mismo codigo dos veces); 16/48.00 azucar, te y edulcorante (comunes); 16/01.06 azucar (1030 u., precio ilegible en la copia).
+- **35.01: 8 bienes tipeados con la cantidad/precio de OTRO bien** (Carga desalineada por las filas #REF!): tela acetato (2.2.9.07097: F7 2 x 47.499, tipeado 50 x 95.000), papel paspartou (F7 10 x 42.000, tipeado 150 x 250),
+  banner (F7 50 x 95.000, tipeado 15 x 17.500), barra pistola (F7 150 x 250, tipeado 9 x 21.100), tinta (F7 9 x 21.100, tipeado 6 x 51.000), plastico de burbujas (F7 10 x 16.000, tipeado 20 x 14.900),
+  masilla durlock 2.7.5.00579 (F7 6 x 51.000, tipeado 40 x 9.650; esa fila hacia caer Presupuesto: puede no estar cargada), extensores (F7 20 x 14.900, tipeado 50 x 2.533). Corregir en RAFAM = decision del usuario.
+- Ya resueltos aunque el .ahk no coincida: 03/01.07 3.4.6.08119 y 4.3.6.01555 (cargados 23/10 con precio redondeado), 11/01.25 3.4.9.04331 (modificado a mano 23/10).
+Limite de la conciliacion: compara lo que se TIPEO, no lo que RAFAM guardo (la sesion bypass verifico conteo y total por lote).
+
+## FUENTE VALIDA desde el 26/10/2026 17:38
+
+El usuario dejo como **unica carpeta valida** `formularios\drive-download-20261026T173837Z-1-001\` (62 archivos, subcarpetas `NN - Nombre`: ahora
+incluye `04 - Salud` y `27 - Transito y Transporte`). Todo lo anterior (carpetas viejas, descarga de las 16:52, zips y `_backup_originales`) se MOVIO a
+`formularios\_ARCHIVO_previo_26-10\` (nada borrado). Usar siempre rutas de la carpeta valida; auditar_planillas.py ya la toma. Las ediciones hechas antes sobre
+las copias viejas (16.02 F11 -> 23113, 01.41 D24, 01.25 D39, 48.00 F12 -> 20500, UM 176 de 01.41 y 01.06) quedaron en el archivo, NO en la carpeta valida.
+
+**Lista del portal del 26/10 (11 formularios):** los 11 estan en la carpeta valida y el total del F7 de cada uno coincide al peso con el del portal.
+Nuevos para cargar: 04 Salud 41.01 ($60.127.470; 26 bienes que Carga no incluye, $18.651.250), 49.01 ($64.743.352; 35 no incluidos, $16.247.500),
+23.01 ($323.889.756; 22 no incluidos, $71.668.480; 9 filas #REF! con bien real); 27 Transito 01.38 ($151.197.878; 2 no incluidos, $75.630.000), 20.01
+($111.467.012), 20.02 ($35.929.085); 17 Seguridad 19.04 ($17.277.535), 19.11 ($54.509.830), 19.01 ($2.723.019.009, version nueva); 16 Jefatura 46.01
+($14.994.910), 01.02 ($825.680.363). 19.11: Carga!B7.. trae FF en 0 (valor guardado desactualizado; en el F7 es 110): recalcular una COPIA con Excel.
+
 ## Auditoria de planillas 21/10/2026 (auditar_planillas.py; listados en PARA_AREAS.xlsx/.md y NO_CUBIERTOS.xlsx)
+
+> **CORRECCION 26/10/2026 al punto 1:** NO todas las filas `#REF!` de Carga son filas borradas. Las que la auditoria marca con origen en una
+> celda real del F7 (no "formula con #REF!") son **bienes reales con la fuente/codigo/UM rotos solo en Carga**; los datos estan intactos en el F7 y
+> hay que cargarlos desde el F7. Casos: 35.01 (Carga filas 508, 509, 510, 518 <- F7 especial E11, E12, A11, E21: 20x7.900, 2x47.499, 10x42.000,
+> 8x65.000 = $1.192.998), 38.01 (Carga filas 8 y 513 <- F7 comun A12 y F7 especial A16), 17/19.01 (ver abajo). 45.00 (Carga 513) tiene cantidad y
+> precio 0: nada que cargar.
+>
+> **17 Seguridad Ciudadana / 19.01.00 (version nueva del 26/10 13:59):** total del F7 = $2.723.019.009 (= total aprobado en el portal). 219 bienes:
+> 182 via Carga ($2.498.517.309), 35 que Carga no incluye ($195.466.180) y 2 con Carga rota: **F7 comun fila 72** (FF 110, 2.9.3.01563 CABLE UTP,
+> ROLLO = 208, 80 x $271.944 = $21.755.520) y **F7 especial fila 61** (FF 110, 2.9.6.01201 POLEA, CADA UNO = 3, 80 x $91.000 = $7.280.000).
+> La carga anterior de 19.01 fue de la version vieja (casi vacia): leer la linea base de la categoria antes de cargar y cargar solo lo que falte.
+> UM: en esta planilla las areas escribieron "UNIDAD" (inciso 2 y 4); inciso 4 = 3 por regla; "UNIDAD" en inciso 2 se asume = CADA UNO (3): confirmar.
+> 19.04.00 ($17.277.535) y 19.11.00 figuran aprobados en el portal pero todavia NO estan en formularios\17 - Seguridad Ciudadana.
 
 1. **Las filas `#REF!` de la hoja Carga NO son bienes perdidos.** Apuntan a filas que alguien borro del F7: en cada planilla,
    bienes del F7 = filas validas de Carga + bienes no cubiertos (ej. 44.01: 72 = 60 + 12; 38.06: 104 = 98 + 6; 01.50: 66 = 66).
@@ -186,3 +227,80 @@ El usuario autorizo: redondear a cero decimales los precios con mas de 2 decimal
 Cargado y verificado: 1110116000 / 01 Actividad Central / 02 Comunicacion e Imagen Institucional. Base 3 reg. / $174.003.008,00 (31402382, 34904331, 35402195);
 planilla 24 filas / $825.680.363, ninguna duplicada ni con problemas de validacion -> 27 reg. / $999.683.371,00 (prueba 4/$177.636.608; lote de 20 -> 24/$989.246.331).
 Unica correccion: 4.3.7.03506 traia precio 1548569,9999999998 (ruido de coma flotante) y se cargo como $1.548.570. Sin UM forzadas (los inciso 2 fuera del Listado dicen CADA UNO = 3).
+
+## Carga del 26/10/2026 (carpeta valida drive-download-20261026T173837Z-1-001; UM como las areas, "UNIDAD" = 3)
+
+Herramientas nuevas: prep_26_10.py (arma la lista completa: Carga + bienes del F7 que Carga no incluye o trae rotos; concilia con el total del portal),
+gen_f26.py (prueba + lotes de 20 con registros/total esperados). Una fila de Carga sin bien igual en el F7 se descarta (23.01: 6 filas con codigo de una
+fila y cantidad/precio de otra). 19.11: se cargo desde una COPIA recalculada con Excel (FF 110).
+Subjurisdicciones: 04 Salud = 1110104000; 27 Transito y Transporte = 1110127000; 16 = 1110116000; 17 = 1110117000.
+
+| Subjurisdiccion / categoria | Planilla | Antes -> despues (reg. / total) | Estado |
+|---|---|---|---|
+| 04 Salud 41.01 Zoonosis | 56 filas, $60.127.470 | 4 / 229.402.282 -> 60 / 289.529.752 | verificado |
+| 04 Salud 49.01 SAME | 109 filas, $64.743.352 | 2 / 93.395.354 -> 111 / 158.138.706 | verificado |
+| 04 Salud 23.01 Atencion Primaria | 117 filas, $323.889.756 (84 Carga + 33 del F7) | 7 / 941.568.536 -> 124 / 1.265.458.292 | verificado |
+| 16 Jefatura 01.02 | 24 filas | 27 / 999.683.371 (sin cambio) | las 24 filas ya estaban cargadas identicas: nada que cargar |
+| 16 Jefatura 46.01 Defensa al Consumidor | 72 filas, $14.994.910 | 1 / 10.788.479 -> 73 / 25.783.389 | verificado |
+| 27 Transito 01.38 | 94 filas, $151.197.878 (92 + 2 del F7) | 3 / 276.858.392 -> 97 / 428.056.270 | verificado |
+| 27 Transito 20.01 | 27 filas, $111.467.012 | 6 / 263.484.526 -> 33 / 374.951.538 | verificado |
+| 27 Transito 20.02 | 35 filas, $35.929.085 | 1 / 26.409.175 -> 36 / 62.338.260 | verificado |
+| 17 Seguridad 19.01 (version nueva) | 219 bienes, $2.723.019.009 | 11 / 13.579.385.391 -> 223 / 16.229.779.400 (+212 filas, $2.650.394.009) | verificado; incluye F7 comun fila 72 (cable UTP) y F7 especial fila 61 (polea) |
+| 17 Seguridad 19.04 | 18 filas, $17.277.535 | 3 / 151.973.105 -> 21 / 169.250.640 | verificado |
+| 17 Seguridad 19.11 | 8 filas, $54.509.830 | 0 -> 8 / 54.509.830 | verificado |
+
+**NO cargados en 17 / 19.01 (7 filas, $72.625.000 de los $2.723.019.009) - decidir:**
+| Fila | Codigo | Motivo | Que hay que decidir |
+|---|---|---|---|
+| Carga#118 | 2.9.6.00904 (5 x 49.000) | UM "KIT" no esta en el catalogo del Listado | codigo de UM para KIT |
+| Carga#125 | 2.9.6.06727 (100 x 280.000) | idem | idem |
+| Carga#126 | 2.4.3.00627 (100 x 350.000) | idem | idem |
+| F7 especial 32 | 2.9.6.07387 KIT DE EMBRAGUE (6 x 210.000) | idem | idem |
+| F7 especial 45 | 2.7.5.07458 SET DE HERRAMIENTAS (4 x 140.000) | UM "SET" no esta en el catalogo | codigo de UM para SET |
+| F7 especial 24 | 4.8.1.01748 LICENCIA SOFTWARE (1 x 7.000.000) | mismo codigo y fuente ya cargado desde Carga (200 x 3.500.000) | duplicado: conservar el cargado o corregir a mano |
+| F7 especial 33 | 2.9.6.01190 RETEN P/AUTOMOTOR (20 x 28.000) | mismo codigo y fuente ya cargado desde Carga (200 x 70.000) | idem |
+Otras notas 19.01: UM forzadas por regla (inciso 3 = 176) en 3.3.1.07073, 3.4.6.07674, 3.2.2.06392; "UNIDAD" en inciso 2 tomada como 3 (CADA UNO) por decision del usuario.
+23.01: filas de Carga #521-#528 (huerfanas, mezcla de codigo/cantidad/precio) NO se cargaron; los 9 bienes reales salen del F7 (2.9.5.03688, 3.3.1.03820, 3.3.3.04981, 4.3.6.02109, 4.3.3.00130, 3.3.3.02440 y otros).
+
+## 16 Jefatura de Gabinete / 35.01 (1110116000): correccion de cantidad y precio (26/10/2026)
+
+Autorizado por el usuario. Modificar + Guardar, solo cantidad y precio (FF 110, UM sin tocar; herramienta `modificar_registro.ps1`). Antes se verifico con Buscar que cada registro tenia exactamente los valores "hoy".
+- 2.2.9.07097 TELA ACETATO: 50 x 95.000 -> 2 x 47.499
+- 2.3.1.04846 PAPEL PASPARTOUF: 150 x 250 -> 10 x 42.000
+- 2.3.3.07274 BANNER: 15 x 17.500 -> 50 x 95.000
+- 2.4.9.08058 BARRA PISTOLA ENCOLADORA: 9 x 21.100 -> 150 x 250
+- 2.5.5.05077 TINTA: 6 x 51.000 -> 9 x 21.100
+- 2.5.8.04490 PLASTICO DE BURBUJAS: 20 x 14.900 -> 10 x 16.000
+- 2.7.5.01921 EXTENSORES PARA PINTURA: 50 x 2.533 -> 20 x 14.900
+- **2.7.5.00579 MASILLA PARA DURLOCK: NO EXISTE en RAFAM (Buscar: "No hay ninguna coincidencia"). No se cargo** (hacia caer Presupuesto.exe; F7: 6 x 51.000).
+Verificado: 193 registros (sin cambio); total $953.586.025 -> $953.565.873 (-$20.152). La baja esperada de $100.152 suponia la masilla: los 7 existentes suman -$20.152; la masilla (6 x 51.000 = +$306.000 si se cargara) no esta, y el -$80.000 restante era el cambio de 40 x 9.650 ($386.000) a $306.000 que no aplica.
+
+## 04 Salud (1110104000) / 01.28 y 22.01 (27/10/2026): carga desde formularios nuevos
+
+Cargadas y verificadas conteo+total por lote. **01.28**: 6 -> 308 registros, $1.018.160.521 -> $2.210.084.671 (302 filas; 5 sin cargar, abajo). **22.01**: 9 -> 261 registros, $5.008.473.070 -> $11.519.552.164 (252 filas; 1 duplicado, 2 repetidas y 4 sin cargar, abajo). Incluyen los bienes que la hoja Carga no cubria (01.28: 34 / $512.148.237; 22.01: 35 / $244.075.674 tras redondear, el F7 dice $244.075.907).
+
+| Subjurisdiccion | Categoria | Fila / codigo | Motivo | Que hay que decidir |
+|---|---|---|---|---|
+| 04 Salud | 01.28 | 2.3.4.01153 - Carga#225 (UM 180 CAJA) - $2.324.000,00 | NO EXISTE en el catalogo de RAFAM: al tipear el codigo (FF 110) no se completa la descripcion ("Ingrese el Bien"); hace desordenar el lote | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 01.28 | 2.9.2.00588 - Carga#227 (UM 3) - $4.231.612,80 | NO EXISTE en el catalogo de RAFAM: al tipear el codigo (FF 110) no se completa la descripcion ("Ingrese el Bien"); hace desordenar el lote | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 01.28 | 4.3.8.00263 - Carga#257 (UM 3) - $72.000.000,00 | NO EXISTE en el catalogo de RAFAM: al tipear el codigo (FF 110) no se completa la descripcion ("Ingrese el Bien"); hace desordenar el lote | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 01.28 | 3.3.3.02014 - F7 especial!30 DISPENSERS AGUA CORRIENTE (11 x 2.962.130,6; UM 176) - $32.583.436,60 | NO EXISTE en el catalogo de RAFAM: al tipear el codigo (FF 110) no se completa la descripcion ("Ingrese el Bien"); hace desordenar el lote | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 01.28 | 3.3.3.02439 - F7 especial!38 RECOLECCION DE RESIDUOS PATOLOGICOS (3 x 120.000.000; UM 176) - $360.000.000,00 | NO EXISTE en el catalogo de RAFAM: al tipear el codigo (FF 110) no se completa la descripcion ("Ingrese el Bien"); hace desordenar el lote | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 22.01 | 2.5.2.02445 - Carga#135 (13.500 x 3.285,69; UM 3) - $44.356.815,00 | NO EXISTE en el catalogo de RAFAM (idem) | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 22.01 | 3.3.3.06763 - Carga#199 (2 x 3.000.000; UM 176) - $6.000.000,00 | NO EXISTE en el catalogo de RAFAM (idem) | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 22.01 | 3.3.3.02354 - Carga#208 (5 x 4.122.565,2; UM 176) - $20.612.826,00 | NO EXISTE en el catalogo de RAFAM (idem) | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 22.01 | 3.3.3.03558 - Carga#216 (320 x 244.545,19; UM 176) - $78.254.460,80 | NO EXISTE en el catalogo de RAFAM (idem) | confirmar el codigo correcto con el area y cargarlo a mano |
+| 04 Salud | 22.01 | 3.4.2.02099 - Carga#209 (90 x 351.520,44) | duplicado: ya existia en la categoria (FF 110) | ninguna (se conserva lo existente) |
+| 04 Salud | 22.01 | 2.5.2.06622 - Carga#176 (7.380 x 619,99) y 2.5.2.07176 - Carga#177 (1.373 x 580,64) | repetidos en la planilla (mismo codigo y FF que Carga#159 y #160, con otra cantidad/precio); se cargo la primera aparicion | decidir si se suman o cual vale |
+| 04 Salud | 22.01 | 109 bienes cargados con precio REDONDEADO a 2 decimales (decision del usuario 27/10; la planilla trae decimales largos, ej. 1383,0994553376909) | RAFAM solo guarda 2 decimales | ninguna; el redondeo suma +$4.254 netos sobre el total de 22.01 |
+| 04 Salud | 01.28 | 2.9.9.07467 (900 x 1.500) | UM "PLIEGO" sin codigo en el catalogo: se cargo con UM 3 (CADA UNO) por decision del usuario | confirmar la UM |
+| 04 Salud | 01.28 / 22.01 | UM tomadas del catalogo de las otras planillas: KILOGRAMO = 1 (2.5.1.02281, 2.7.9.00820 y 22.01 inciso 2 de 1), PAQUETE = 210, etc.; CAJA 180, ROLLO 208, METRO 4, LITROS 2, PAR 146 | no estaban en la lista del usuario | revisar las UM distintas de 3/180/208/4/2/146/176 |
+
+## 17 Seguridad Ciudadana (1110117000) / 19.01 (27/10/2026): nueva version de la planilla
+
+Autorizacion expresa del usuario (solo 17/19.01): reemplazar lo cargado el 26/10 por la version nueva (12:13). Base 223 reg / $16.229.779.400 -> **228 reg / $16.422.262.049** (verificado: base 13.579.385.391 de los 11 registros previos + F7 nuevo $2.850.576.658 menos las 2 filas repetidas $7.700.000). Se modifico la CANTIDAD de **162 registros** (mismo codigo, FF 110 y precio; +$114.418.649; detalle en `logs\mod_lote.log` y `cargas\f26\17_19.01_mods.csv`; el primero, 2.9.9.01888 50->60, a mano) y se cargaron **5 bienes nuevos** (+$78.064.000): 2.9.6.07387 KIT DE EMBRAGUE (7 x 210.000), 2.7.5.07458 SET DE HERRAMIENTAS (5 x 140.000), 2.9.6.00904 DISTRIBUIDOR (6 x 49.000), 2.9.6.06727 CONJUNTO DE EMBRAGUE Y RULEMAN (120 x 280.000), 2.4.3.00627 CORREA (120 x 350.000). UM 3 para KIT/SET (decision del usuario) -> **confirmar la UM**. 49 registros ya estaban con la cantidad nueva. No se borro nada. Los 2 #REF! reales (cable UTP 2.9.3.01563 y polea 2.9.6.01201) solo se actualizaron en cantidad.
+
+| Subjurisdiccion | Categoria | Fila / codigo | Motivo | Que hay que decidir |
+|---|---|---|---|---|
+| 17 Seguridad Ciudadana | 19.01 | 4.8.1.01748 LICENCIA SOFTWARE (F7 especial 24: 1 x 7.000.000, UM 3) | repetido (mismo codigo y FF 110 que LICENCIA 200 x 3.500.000, ya cargada y sin cambios). Se intento cargarlo: **RAFAM no lo graba** (el formulario queda sin guardar); se descarto, sin efecto | decidir si se corrige la planilla (otro codigo) o se modifica el registro existente |
+| 17 Seguridad Ciudadana | 19.01 | 2.9.6.01190 RETEN P/ AUTOMOTOR (F7 especial 33: 25 x 28.000, antes 20) | repetido (mismo codigo y FF que RETEN P/AUTOMOTOR 230 x 70.000, cuya cantidad subio de 200 a 230). No se intento: mismo caso que la licencia | idem; $700.000 sin cargar |

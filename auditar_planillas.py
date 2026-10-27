@@ -39,7 +39,17 @@ def vacio(v):
 
 def carpetas_vigentes():
     por_sub = {}
-    for d in RAIZ.iterdir():
+    # Fuente valida = la mas reciente entre las carpetas numeradas sueltas en formularios\ y las descargas drive-download-*
+    # (lo viejo se archiva en _ARCHIVO_previo_*).
+    candidatas = [d for d in RAIZ.iterdir() if d.is_dir() and d.name.startswith("drive-download-")]
+    sueltas = [d for d in RAIZ.iterdir() if d.is_dir() and re.match(r"^\d\d - ", d.name)]
+    base = RAIZ
+    if sueltas or candidatas:
+        mejor_suelta = max((d.stat().st_mtime for d in sueltas), default=0)
+        mejor_desc = max(candidatas, key=lambda d: d.stat().st_mtime, default=None)
+        if mejor_desc is not None and (not sueltas or mejor_desc.stat().st_mtime > mejor_suelta):
+            base = mejor_desc
+    for d in base.iterdir():
         m = re.match(r"^(\d\d) - (?:.*-(\d{8}T\d{6}Z)-)?", d.name)   # con o sin sufijo de fecha de la descarga
         if d.is_dir() and m and not d.name.startswith("_"):
             marca = m.group(2) or ""
@@ -107,7 +117,9 @@ def items_visibles(ws, tipo, por_nom, por_cod, hallazgos, archivo):
             elif isinstance(precio, float) and abs(precio - round(precio, 2)) > 1e-9:
                 hallazgos.append({**base, "celda": f"F{r}", "problema": f"precio con mas de 2 decimales ({precio!r})",
                                   "falta": "confirmar el precio", "sev": "revisar"})
-            elif isinstance(precio, float) and precio != int(precio) and round(precio * 1000) == precio * 1000 and precio < 1000:
+            elif (isinstance(precio, float) and precio != int(precio) and precio < 1000
+                  and abs(precio * 100 - round(precio * 100)) > 1e-6 and abs(precio * 1000 - round(precio * 1000)) < 1e-6):
+                # exactamente 3 decimales (23.113): punto de miles mal escrito; 56.5 o 315.69 son decimales legitimos
                 hallazgos.append({**base, "celda": f"F{r}", "problema": f"precio {precio!r} parece un punto de miles mal escrito",
                                   "falta": "confirmar si es {:,.0f}".format(precio * 1000), "sev": "revisar"})
             if vacio(um):
@@ -140,6 +152,7 @@ def auditar(path, codsub):
     cv, cf = wb["Carga"], wbf["Carga"]
     validas = errores = 0
     filas_ref = []
+    firma_filas, costo = [], 0.0
     for r in range(7, cv.max_row + 1):
         if str(cv.cell(r, 1).value or "").strip().lower() != "send":
             continue
@@ -154,6 +167,9 @@ def auditar(path, codsub):
         ff, cod, um, qty, precio = vals
         if all(not vacio(x) for x in (ff, cod, qty, precio)) and COD.match(str(cod).strip()):
             validas += 1
+            firma_filas.append((str(ff), str(cod).strip(), str(um), qty, precio))
+            if isinstance(qty, (int, float)) and isinstance(precio, (int, float)):
+                costo += qty * precio
     # Bienes escritos en el F7 que NINGUNA fila de Carga referencia (p. ej. filas insertadas por el area): no se cargarian.
     refs = set()
     for r in range(7, cf.max_row + 1):
@@ -173,7 +189,8 @@ def auditar(path, codsub):
             no_cub.append(dict(hoja=ws.title, fila=r, ff=ff, codigo=cod, um=um, cantidad=qty, precio=precio, denominacion=den,
                                valor=(qty * precio) if isinstance(qty, (int, float)) and isinstance(precio, (int, float)) else None))
     return dict(subjurisdiccion=codsub, archivo=nombre, ruta=str(path), items_comun=n_com, items_especial=n_esp,
-                no_cubiertos=no_cub,
+                no_cubiertos=no_cub, costo_carga=round(costo, 2),
+                firma=__import__("hashlib").sha1(json.dumps(sorted(firma_filas) + [(x["hoja"], x["fila"], x["codigo"], x["cantidad"], x["precio"]) for x in no_cub], default=str).encode()).hexdigest()[:12],
                 items_f7=n_com + n_esp, filas_carga_validas=validas, filas_carga_ref=errores,
                 diferencia=(n_com + n_esp) - validas, filas_ref=filas_ref, hallazgos=hall)
 
