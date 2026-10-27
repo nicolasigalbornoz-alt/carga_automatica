@@ -1,0 +1,10 @@
+.claude/settings.local.json
+logs/
+formularios/
+__pycache__/
+cargas/
+*.xlsx
+~$*
+sqlnet.log
+nocub_plan.json
+*.ahk
